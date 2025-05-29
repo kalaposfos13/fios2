@@ -22,7 +22,7 @@
 // #include "core/libraries/kernel/file_system.h"
 // #include "core/tls.h"
 
-namespace Libraries::Fios2 {
+namespace Fios2 {
 
 std::mutex m;
 

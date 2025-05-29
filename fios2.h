@@ -5,12 +5,7 @@
 
 #include "types.h"
 
-namespace Libraries::Fios2 {
-
-struct SceKernelIovec {
-    void* iov_base;
-    size_t iov_len;
-};
+namespace Fios2 {
 
 constexpr u32 ORBIS_FIOS_PATH_MAX = 1024;
 
