@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "logging/log.h"
+#include "iostream"
 
 // Sometimes we want to try to continue even after hitting an assert.
 // However touching this file yields a global recompilation as this header is included almost
@@ -12,6 +12,8 @@
 
 void assert_fail_impl();
 [[noreturn]] void unreachable_impl();
+
+extern "C" [[noreturn]] void __cxa_thread_atexit_impl();
 
 #ifdef _MSC_VER
 #define SHAD_NO_INLINE __declspec(noinline)
@@ -22,7 +24,7 @@ void assert_fail_impl();
 #define ASSERT(_a_)                                                                                \
     ([&]() SHAD_NO_INLINE {                                                                        \
         if (!(_a_)) [[unlikely]] {                                                                 \
-            LOG_CRITICAL(Debug, "Assertion Failed!");                                              \
+            std::cout << "Assertion Failed!\n";                                                    \
             assert_fail_impl();                                                                    \
         }                                                                                          \
     }())
@@ -30,21 +32,21 @@ void assert_fail_impl();
 #define ASSERT_MSG(_a_, ...)                                                                       \
     ([&]() SHAD_NO_INLINE {                                                                        \
         if (!(_a_)) [[unlikely]] {                                                                 \
-            LOG_CRITICAL(Debug, "Assertion Failed!\n" __VA_ARGS__);                                \
+            std::cout << "Assertion Failed!\n";                                                    \
             assert_fail_impl();                                                                    \
         }                                                                                          \
     }())
 
 #define UNREACHABLE()                                                                              \
     do {                                                                                           \
-        LOG_CRITICAL(Debug, "Unreachable code!");                                                  \
-        while(1);                                                                                  \
+        std::cout << "Assertion Failed!\n";                                                        \
+        unreachable_impl();                                                                        \
     } while (0)
 
 #define UNREACHABLE_MSG(...)                                                                       \
     do {                                                                                           \
-        LOG_CRITICAL(Debug, "Unreachable code!\n" __VA_ARGS__);                                    \
-        while(1);                                                                                  \
+        std::cout << "Assertion Failed!\n";                                                        \
+        unreachable_impl();                                                                        \
     } while (0)
 
 #ifdef _DEBUG

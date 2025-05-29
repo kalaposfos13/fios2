@@ -25,7 +25,7 @@ static_assert(sizeof(u128) == 16, "u128 must be 128 bits wide");
 using VAddr = uintptr_t;
 using PAddr = uintptr_t;
 
-#define PS4_SYSV_ABI __attribute__((sysv_abi))
+#define PS4_SYSV_ABI
 
 // UDLs for memory size values
 constexpr unsigned long long operator""_KB(unsigned long long x) {
