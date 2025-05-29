@@ -1,9 +1,10 @@
-OO_TOOLCHAIN ?= /media/kalaposfos/Shared/shadps4/tools/PS4Toolchain
+OO_TOOLCHAIN ?= /media/kalaposfos/Shared/shadps4/tools/PS4Toolchain-18
 TARGET      ?= libSceFios2
 INTDIR      ?= build
 OUTDIR      ?= out
+ROOT := .
 
-CFLAGS   = -fPIC -funwind-tables --target=x86_64-pc-freebsd12-elf -I"$(OO_TOOLCHAIN)/include"
+CFLAGS   = -fPIC -funwind-tables --target=x86_64-pc-freebsd12-elf -I"$(OO_TOOLCHAIN)/include" -I.
 CXXFLAGS = $(CFLAGS) -I"$(OO_TOOLCHAIN)/include/c++/v1"
 LDFLAGS  = -pie --script "$(OO_TOOLCHAIN)/link.x" --eh-frame-hdr -L"$(OO_TOOLCHAIN)/lib"
 LIBS     = -lc -lkernel -lc++
