@@ -13,7 +13,6 @@
 void assert_fail_impl();
 [[noreturn]] void unreachable_impl();
 
-extern "C" [[noreturn]] void __cxa_thread_atexit_impl();
 
 #ifdef _MSC_VER
 #define SHAD_NO_INLINE __declspec(noinline)
