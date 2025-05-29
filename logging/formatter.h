@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include <type_traits>
-#include <fmt/format.h>
+#include <c++/v1/type_traits>
+#include "fmt/format.h"
 
 // Adapted from https://github.com/fmtlib/fmt/issues/2704
 // a generic formatter for enum classes
@@ -25,11 +25,11 @@ template <typename T = std::string_view>
 struct UTF {
     T data;
 
-    explicit UTF(const std::u8string_view view) {
+    explicit UTF(const std::string_view view) {
         data = view.empty() ? T{} : T{(const char*)&view.front(), (const char*)&view.back() + 1};
     }
 
-    explicit UTF(const std::u8string& str) : UTF(std::u8string_view{str}) {}
+    explicit UTF(const std::string& str) : UTF(std::string_view{str}) {}
 };
 } // namespace fmt
 
