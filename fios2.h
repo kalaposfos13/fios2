@@ -1,6 +1,16 @@
+// SPDX-FileCopyrightText: Copyright 2025 shadPS4 Emulator Project
+// SPDX-License-Identifier: GPL-2.0-or-later
+
 #pragma once
 
 #include "types.h"
+
+namespace Libraries::Fios2 {
+
+struct SceKernelIovec {
+    void* iov_base;
+    size_t iov_len;
+};
 
 constexpr u32 ORBIS_FIOS_PATH_MAX = 1024;
 
@@ -57,7 +67,7 @@ typedef struct OrbisFiosOpenParams {
     OrbisFiosBuffer buffer;
 } OrbisFiosOpenParams;
 
-typedef int (*OrbisFiosOpCallback)(void* pContext, OrbisFiosOp op,
+typedef int PS4_SYSV_ABI (*OrbisFiosOpCallback)(void* pContext, OrbisFiosOp op,
                                                 OrbisFiosOpEvent event, int err);
 
 typedef struct OrbisFiosOpAttr {
@@ -71,6 +81,6 @@ typedef struct OrbisFiosOpAttr {
     void* pReserved;
 } OrbisFiosOpAttr;
 
-s32 sceFiosOpSyncWait(OrbisFiosOp op);
-OrbisFiosSize sceFiosOpSyncWaitForIO(OrbisFiosOp op);
-
+s32 PS4_SYSV_ABI sceFiosOpSyncWait(OrbisFiosOp op);
+OrbisFiosSize PS4_SYSV_ABI sceFiosOpSyncWaitForIO(OrbisFiosOp op);
+} // namespace Libraries::Fios2

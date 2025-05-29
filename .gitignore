@@ -1,3 +1,4 @@
 *.so
 *.prx
 build
+.vscode
