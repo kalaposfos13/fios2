@@ -7,8 +7,8 @@
 #include <array>
 #include <string_view>
 
-#include "formatter.h"
-#include "types.h"
+#include "common/logging/formatter.h"
+#include "common/logging/types.h"
 
 namespace Common::Log {
 

@@ -8,11 +8,11 @@
 #include <windows.h>
 #endif
 
-#include "assert.h"
-#include "filter.h"
-#include "log.h"
-#include "log_entry.h"
-#include "text_formatter.h"
+#include "common/assert.h"
+#include "common/logging/filter.h"
+#include "common/logging/log.h"
+#include "common/logging/log_entry.h"
+#include "common/logging/text_formatter.h"
 
 namespace Common::Log {
 

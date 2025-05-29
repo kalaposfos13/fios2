@@ -5,7 +5,7 @@
 
 #include <chrono>
 
-#include "types.h"
+#include "common/logging/types.h"
 
 namespace Common::Log {
 

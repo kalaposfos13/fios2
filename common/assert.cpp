@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: Copyright 2021 yuzu Emulator Project
 // SPDX-License-Identifier: GPL-2.0-or-later
 
-#include "arch.h"
-#include "assert.h"
-#include "logging/backend.h"
+#include "common/arch.h"
+#include "common/assert.h"
+#include "common/logging/backend.h"
 
 #if defined(ARCH_X86_64)
 #define Crash() __asm__ __volatile__("int $3")

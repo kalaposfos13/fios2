@@ -6,7 +6,7 @@
 #include <array>
 #include <cstddef>
 #include <string_view>
-#include "logging/types.h"
+#include "common/logging/types.h"
 
 namespace Common::Log {
 

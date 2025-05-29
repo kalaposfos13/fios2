@@ -38,13 +38,13 @@ void assert_fail_impl();
 #define UNREACHABLE()                                                                              \
     do {                                                                                           \
         LOG_CRITICAL(Debug, "Unreachable code!");                                                  \
-        unreachable_impl();                                                                        \
+        while(1);                                                                                  \
     } while (0)
 
 #define UNREACHABLE_MSG(...)                                                                       \
     do {                                                                                           \
         LOG_CRITICAL(Debug, "Unreachable code!\n" __VA_ARGS__);                                    \
-        unreachable_impl();                                                                        \
+        while(1);                                                                                  \
     } while (0)
 
 #ifdef _DEBUG
