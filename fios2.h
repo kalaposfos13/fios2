@@ -76,9 +76,7 @@ typedef struct OrbisFiosOpAttr {
 } OrbisFiosOpAttr;
 
 extern "C" {
-void _start() {
-    return;
-}
+void _start();
 u8 sceFiosArchiveGetDecompressorThreadCount();
 OrbisFiosOp sceFiosArchiveGetMountBufferSize(const OrbisFiosOpAttr* pAttr, const char* pArchivePath,
                                              const OrbisFiosOpenParams* pOpenParams);
