@@ -1,4 +1,4 @@
-OO_TOOLCHAIN ?= /media/kalaposfos/Shared/shadps4/tools/PS4Toolchain-18
+OO_TOOLCHAIN ?= $(OO_PS4_TOOLCHAIN)
 TARGET      ?= libSceFios2
 INTDIR      ?= build
 OUTDIR      ?= out
