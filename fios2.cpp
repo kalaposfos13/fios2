@@ -18,8 +18,7 @@
 #include <orbis/libkernel.h>
 // #include "orbis/_types/kernel.h"
 
-extern "C"
-void _start() {
+extern "C" void _start() {
     return; // shut up compiler
 }
 
@@ -56,8 +55,6 @@ void EnsureMapsInitialized() {
         fh_path_map = new std::unordered_map<OrbisFiosFH, std::string>();
         dh_path_map = new std::unordered_map<OrbisFiosDH, std::string>();
         file_stat_map = new std::unordered_map<std::string, _OrbisKernelStat>();
-
-        m;
     }
 }
 
@@ -286,9 +283,9 @@ s32 sceFiosDeleteSync() {
 }
 
 s32 sceFiosDHClose(const OrbisFiosOpAttr* pAttr, OrbisFiosDH dh) {
-    LOG_WARNING("(STUBBED) called, dh: {}", dh);
     EnsureMapsInitialized();
     std::scoped_lock l{m};
+    LOG_WARNING("(STUBBED) called, dh: {}", dh);
     s32 ret = sceKernelClose(dh);
     dh_path_map->erase(dh);
     OrbisFiosOp op = ++op_count;
@@ -310,9 +307,9 @@ s32 sceFiosDHGetPath() {
 
 OrbisFiosOp sceFiosDHOpen(const OrbisFiosOpAttr* pAttr, OrbisFiosDH* pOutDH, const char* pPath,
                           OrbisFiosBuffer buf) {
-    LOG_WARNING("(DUMMY) called, path: {}", pPath);
     EnsureMapsInitialized();
     std::scoped_lock l{m};
+    LOG_WARNING("(DUMMY) called, path: {}", pPath);
 
     s32 dh = sceKernelOpen(ToApp0(pPath), O_DIRECTORY, 0);
     dh_path_map->emplace(dh, pPath);
@@ -406,8 +403,8 @@ OrbisFiosOp sceFiosExists(const OrbisFiosOpAttr* pAttr, const char* pPath, bool*
     OrbisFiosOp op = ++op_count;
     s32 ret;
     {
-        std::scoped_lock l{m};
         EnsureMapsInitialized();
+        std::scoped_lock l{m};
         std::string path_str = std::string(ToApp0(pPath));
         auto cache_it = file_stat_map->find(path_str);
         if (cache_it == file_stat_map->end()) /* no cache hit */ {
@@ -444,9 +441,9 @@ bool sceFiosExistsSync(const OrbisFiosOpAttr* pAttr, const char* pPath) {
 }
 
 s32 sceFiosFHClose(const OrbisFiosOpAttr* pAttr, OrbisFiosFH fh) {
-    LOG_WARNING("(DUMMY) called pAttr: {} fh: {}", (void*)pAttr, fh);
     EnsureMapsInitialized();
     std::scoped_lock l{m};
+    LOG_WARNING("(DUMMY) called pAttr: {} fh: {}", (void*)pAttr, fh);
     OrbisFiosOp op = ++op_count;
     s32 ret = sceKernelClose(fh);
     op_return_codes_map->emplace(op, ret);
@@ -483,9 +480,9 @@ const char* sceFiosFHGetPath(OrbisFiosFH fh) {
 }
 
 OrbisFiosSize sceFiosFHGetSize(OrbisFiosFH fh) {
-    LOG_WARNING("(DUMMY) called, fh: {}", (u32)fh);
     EnsureMapsInitialized();
     std::scoped_lock l{m};
+    LOG_WARNING("(DUMMY) called, fh: {}", (u32)fh);
     if (!sceFiosIsValidHandle(fh)) {
         return -1;
     }
@@ -497,9 +494,9 @@ OrbisFiosSize sceFiosFHGetSize(OrbisFiosFH fh) {
 OrbisFiosOp sceFiosFHOpenWithMode(const OrbisFiosOpAttr* pAttr, OrbisFiosFH* pOutFH,
                                   const char* pPath, const OrbisFiosOpenParams* pOpenParams,
                                   s32 nativeMode) {
-    LOG_DEBUG("(DUMMY) called, path: {}", pPath);
     EnsureMapsInitialized();
     std::scoped_lock l{m};
+    LOG_DEBUG("(DUMMY) called, path: {}", pPath);
     s32 open_params = pOpenParams ? pOpenParams->openFlags : 1;
     u32 open_param = 1;
     if ((open_params & 3) != 2) {
@@ -531,7 +528,7 @@ OrbisFiosOp sceFiosFHOpenWithMode(const OrbisFiosOpAttr* pAttr, OrbisFiosFH* pOu
     CallFiosCallback(pAttr, op, OrbisFiosOpEvents::Complete, ret);
     // pros: it fixes a race condition in GRR
     // cons: I don't know why it works
-    std::this_thread::sleep_for(std::chrono::nanoseconds(1));
+    std::this_thread::sleep_for(std::chrono::nanoseconds(2));
     return op;
 }
 
@@ -805,10 +802,9 @@ s32 sceFiosFilenoToFH() {
 
 OrbisFiosOp sceFiosFileRead(const OrbisFiosOpAttr* pAttr, const char* pPath, void* pBuf,
                             OrbisFiosSize length, OrbisFiosOffset offset) {
-    LOG_WARNING("(DUMMY) called, path: {}, length: {}, offset: {}", pPath, length, offset);
-
     EnsureMapsInitialized();
     std::scoped_lock l{m};
+    LOG_WARNING("(DUMMY) called, path: {}, length: {}, offset: {}", pPath, length, offset);
     OrbisFiosOp op = ++op_count;
     s64 ret = -1;
 
@@ -831,9 +827,9 @@ OrbisFiosOp sceFiosFileRead(const OrbisFiosOpAttr* pAttr, const char* pPath, voi
 
 OrbisFiosSize sceFiosFileReadSync(const OrbisFiosOpAttr* pAttr, const char* pPath, void* pBuf,
                                   OrbisFiosSize length, OrbisFiosOffset offset) {
-    LOG_WARNING("(DUMMY) called, path: {}, length: {}, offset: {}", pPath, length, offset);
     EnsureMapsInitialized();
     std::scoped_lock l{m};
+    LOG_WARNING("(DUMMY) called, path: {}, length: {}, offset: {}", pPath, length, offset);
     s64 ret = -1;
 
     s32 fd = sceKernelOpen(ToApp0(pPath), O_RDONLY, 0);
