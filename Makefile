@@ -45,10 +45,10 @@ $(OUTPUT_ELF): $(OBJ)
 	ld.lld -m elf_x86_64 $(LDFLAGS) $(LIBS) "$(OO_TOOLCHAIN)/lib/crtlib.o" $^ -o $@
 
 $(INTDIR)/%.o.stub: %.c | $(INTDIR)
-	clang -target $(STUB_TARGET) $(STUBFLAGS) -I"$(OO_TOOLCHAIN)/include" -c $< -o $@
+	clang -target $(STUB_TARGET) $(STUBFLAGS) -I"$(OO_TOOLCHAIN)/include" -Isrc -c $< -o $@
 
 $(INTDIR)/%.o.stub: %.cpp | $(INTDIR)
-	clang++ -target $(STUB_TARGET) $(STUBFLAGS) -I"$(OO_TOOLCHAIN)/include" -I"$(OO_TOOLCHAIN)/include/c++/v1" -c $< -o $@
+	clang++ -target $(STUB_TARGET) $(STUBFLAGS) -I"$(OO_TOOLCHAIN)/include" -I"$(OO_TOOLCHAIN)/include/c++/v1" -Isrc -c $< -o $@
 
 $(OUTPUT_STUB): $(STUBOBJ)
 	clang++ -target $(STUB_TARGET) -shared -fuse-ld=lld $(STUBFLAGS) -L"$(OO_TOOLCHAIN)/lib" $(LIBS) $^ -o $@
