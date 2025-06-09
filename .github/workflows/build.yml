@@ -19,9 +19,10 @@ jobs:
     - name: Download and extract OpenOrbis Toolchain
       run: |
         curl -L -o toolchain.zip https://github.com/OpenOrbis/OpenOrbis-PS4-Toolchain/releases/download/v0.5.3/toolchain-llvm-18.2.zip
-        unzip toolchain.zip -d toolchain
-        echo "$(pwd)/toolchain/toolchain-llvm-18.2/bin" >> $GITHUB_PATH
-        echo "OO_PS4_TOOCHAIN=$(pwd)/toolchain/toolchain-llvm-18.2" >> $GITHUB_ENV
+        unzip toolchain.zip
+        tar -xf toolchain-llvm-18.tar.gz
+        echo "${{ github.workspace }}/OpenOrbis/PS4Toolchain/bin" >> $GITHUB_PATH
+        echo "OO_PS4_TOOLCHAIN=${{ github.workspace }}/OpenOrbis/PS4Toolchain" >> $GITHUB_ENV
 
     - name: Build PRX
       run: make all
