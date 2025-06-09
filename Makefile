@@ -12,8 +12,8 @@ LIBS     = -lc -lkernel -lc++
 STUBFLAGS = -ffreestanding -nostdlib -fno-builtin -fPIC
 STUB_TARGET = x86_64-pc-linux-gnu
 
-SRC_CPP := $(shell find . -name "*.cpp")
-SRC_C   := $(shell find . -name "*.c")
+SRC_CPP := $(shell find src -name "*.cpp")
+SRC_C   := $(shell find src -name "*.c")
 
 OBJ     := $(patsubst %.cpp,$(INTDIR)/%.o,$(SRC_CPP)) \
            $(patsubst %.c,$(INTDIR)/%.o,$(SRC_C))
