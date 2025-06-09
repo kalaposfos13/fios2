@@ -35,7 +35,7 @@ std::unordered_map<OrbisFiosOp, OrbisFiosSize>* op_io_return_codes_map = nullptr
 std::unordered_map<OrbisFiosFH, std::string>* fh_path_map = nullptr;
 std::unordered_map<OrbisFiosDH, std::string>* dh_path_map = nullptr;
 
-std::unordered_map<std::string, OrbisKernelStat>* file_stat_map = nullptr;
+std::unordered_map<std::string, _OrbisKernelStat>* file_stat_map = nullptr;
 
 const char* ToApp0(const char* _arc) {
     static thread_local std::string result;
@@ -55,7 +55,9 @@ void EnsureMapsInitialized() {
         op_io_return_codes_map = new std::unordered_map<OrbisFiosOp, OrbisFiosSize>();
         fh_path_map = new std::unordered_map<OrbisFiosFH, std::string>();
         dh_path_map = new std::unordered_map<OrbisFiosDH, std::string>();
-        file_stat_map = new std::unordered_map<std::string, OrbisKernelStat>();
+        file_stat_map = new std::unordered_map<std::string, _OrbisKernelStat>();
+
+        m;
     }
 }
 
@@ -409,9 +411,9 @@ OrbisFiosOp sceFiosExists(const OrbisFiosOpAttr* pAttr, const char* pPath, bool*
         std::string path_str = std::string(ToApp0(pPath));
         auto cache_it = file_stat_map->find(path_str);
         if (cache_it == file_stat_map->end()) /* no cache hit */ {
-            // LOG_INFO("(DUMMY) called pAttr: {} path: {}", (void*)pAttr, pPath);
-            OrbisKernelStat stat;
-            bool exists = (sceKernelStat(ToApp0(pPath), &stat) == ORBIS_OK);
+            LOG_INFO("(DUMMY) called pAttr: {} path: {}", (void*)pAttr, pPath);
+            _OrbisKernelStat stat{};
+            bool exists = (sceKernelStat(ToApp0(pPath), (OrbisKernelStat*)&stat) == ORBIS_OK);
             if (pOutExists) {
                 *pOutExists = exists;
             }
@@ -487,8 +489,8 @@ OrbisFiosSize sceFiosFHGetSize(OrbisFiosFH fh) {
     if (!sceFiosIsValidHandle(fh)) {
         return -1;
     }
-    OrbisKernelStat sb{};
-    sceKernelFstat(fh, &sb);
+    _OrbisKernelStat sb{};
+    sceKernelFstat(fh, (OrbisKernelStat*)&sb);
     return sb.st_size;
 }
 
@@ -765,18 +767,21 @@ OrbisFiosOp sceFiosFileGetSize(const OrbisFiosOpAttr* pAttr, const char* pPath) 
     EnsureMapsInitialized();
     std::scoped_lock l{m};
     OrbisFiosOp op = ++op_count;
-    OrbisKernelStat stat{};
+    _OrbisKernelStat stat{};
     std::string path_str = std::string(ToApp0(pPath));
     bool exists;
     auto cache_it = file_stat_map->find(path_str);
     if (cache_it == file_stat_map->end()) /* no cache hit */ {
-        exists = sceKernelStat(ToApp0(pPath), &stat) == ORBIS_OK;
+        LOG_DEBUG("No cache hit");
+        exists = sceKernelStat(ToApp0(pPath), (OrbisKernelStat*)&stat) == ORBIS_OK;
         file_stat_map->emplace(path_str, stat); // add to cache
     } else {
+        LOG_DEBUG("Cache hit");
         exists = cache_it->second.st_mode != 0;
         stat = cache_it->second;
     }
     if (!exists) { // here
+        LOG_DEBUG("File {} does not exist", pPath);
         op_io_return_codes_map->emplace(op, ORBIS_FIOS_ERROR_BAD_PATH);
         return op;
     }
@@ -1215,25 +1220,25 @@ OrbisFiosOp sceFiosStat(const OrbisFiosOpAttr* pAttr, const char* pPath,
     LOG_WARNING("(DUMMY) called pAttr: {} path: {}", (void*)pAttr, pPath);
 
     OrbisFiosOp op = ++op_count;
-    OrbisKernelStat kstat{};
-    s32 ret = sceKernelStat(ToApp0(pPath), &kstat);
+    _OrbisKernelStat stat{};
+    s32 ret = sceKernelStat(ToApp0(pPath), (OrbisKernelStat*)&stat);
     if (ret < 0) {
         op_return_codes_map->emplace(op, ORBIS_FIOS_ERROR_BAD_PATH);
         CallFiosCallback(pAttr, op, OrbisFiosOpEvents::Complete, ORBIS_FIOS_ERROR_BAD_PATH);
         return op;
     }
 
-    pOutStatus->fileSize = kstat.st_size;
-    pOutStatus->accessDate = kstat.st_atim.tv_sec;
-    pOutStatus->modificationDate = kstat.st_mtim.tv_sec;
-    pOutStatus->creationDate = kstat.st_birthtim.tv_sec;
+    pOutStatus->fileSize = stat.st_size;
+    pOutStatus->accessDate = stat.st_atim.tv_sec;
+    pOutStatus->modificationDate = stat.st_mtim.tv_sec;
+    pOutStatus->creationDate = stat.st_birthtim.tv_sec;
     pOutStatus->statFlags = 0;
     pOutStatus->reserved = 0;
-    pOutStatus->uid = kstat.st_uid;
-    pOutStatus->gid = kstat.st_gid;
-    pOutStatus->dev = kstat.st_dev;
-    pOutStatus->ino = kstat.st_ino;
-    pOutStatus->mode = kstat.st_mode;
+    pOutStatus->uid = stat.st_uid;
+    pOutStatus->gid = stat.st_gid;
+    pOutStatus->dev = stat.st_dev;
+    pOutStatus->ino = stat.st_ino;
+    pOutStatus->mode = stat.st_mode;
 
     op_return_codes_map->emplace(op, ORBIS_OK);
     CallFiosCallback(pAttr, op, OrbisFiosOpEvents::Complete, ret);

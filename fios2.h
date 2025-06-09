@@ -5,6 +5,33 @@
 
 #include "types.h"
 
+// copied from shadPS4's correct definition
+struct _OrbisKernelTimespec {
+    s64 tv_sec;
+    s64 tv_nsec;
+};
+struct _OrbisKernelStat {
+    u32 st_dev;
+    u32 st_ino;
+    u16 st_mode;
+    u16 st_nlink;
+    u32 st_uid;
+    u32 st_gid;
+    u32 st_rdev;
+    _OrbisKernelTimespec st_atim;
+    _OrbisKernelTimespec st_mtim;
+    _OrbisKernelTimespec st_ctim;
+    s64 st_size;
+    s64 st_blocks;
+    u32 st_blksize;
+    u32 st_flags;
+    u32 st_gen;
+    s32 st_lspare;
+    _OrbisKernelTimespec st_birthtim;
+    u32 : (8 / 2) * (16 - static_cast<int>(sizeof(_OrbisKernelTimespec)));
+    u32 : (8 / 2) * (16 - static_cast<int>(sizeof(_OrbisKernelTimespec)));
+};
+
 namespace Fios2 {
 
 constexpr u32 ORBIS_FIOS_PATH_MAX = 1024;
