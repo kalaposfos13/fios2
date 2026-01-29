@@ -12,9 +12,9 @@
 #include <thread>
 #include <unordered_map>
 #include <vector>
+#include <fcntl.h>
 
 #include <orbis/libkernel.h>
-// #include "orbis/_types/kernel.h"
 
 extern "C" void _start() {
     return; // shut up compiler
@@ -37,6 +37,9 @@ std::unordered_map<std::string, _OrbisKernelStat>* file_stat_map = nullptr;
 const char* ToApp0(const char* _arc) {
     static thread_local std::string result;
     std::string arc(_arc);
+    if(!(arc.find("/app") == 0 || arc.find("arc") == 0)) {
+        LOG_CRITICAL("Path with unknown base: {}", arc);
+    }
     auto first_slash = arc.find('/');
     if (first_slash == std::string::npos || first_slash == 0) {
         return _arc;

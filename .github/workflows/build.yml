@@ -18,9 +18,8 @@ jobs:
 
     - name: Download and extract OpenOrbis Toolchain
       run: |
-        curl -L -o toolchain.zip https://github.com/OpenOrbis/OpenOrbis-PS4-Toolchain/releases/download/v0.5.3/toolchain-llvm-18.2.zip
-        unzip toolchain.zip
-        tar -xf toolchain-llvm-18.tar.gz
+        curl -L -o toolchain.tar.gz https://github.com/ps4emulation/OpenOrbis-PS4-Toolchain/releases/download/0.5.4-4/v0.5.4-4.tar.gz
+        tar -xf toolchain.tar.gz
         echo "${{ github.workspace }}/OpenOrbis/PS4Toolchain/bin" >> $GITHUB_PATH
         echo "OO_PS4_TOOLCHAIN=${{ github.workspace }}/OpenOrbis/PS4Toolchain" >> $GITHUB_ENV
 
